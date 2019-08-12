@@ -429,6 +429,18 @@ class WebViewController {
     });
   }
 
+  Future<void> loadData(String data, {String baseUrl,
+    String mimeType = "text/html", String encoding = "UTF-8", String historyUrl}) async {
+    assert(data != null);
+    return _channel.invokeMethod('loadData', <String, dynamic>{
+      'data': data,
+      'baseUrl': baseUrl,
+      'mimeType': mimeType,
+      'encoding': encoding,
+      'historyUrl': historyUrl,
+    });
+  }
+
   /// Loads the specified file.
   ///
   /// `url` must not be null.

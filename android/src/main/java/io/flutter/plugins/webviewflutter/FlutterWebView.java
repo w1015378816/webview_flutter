@@ -70,6 +70,9 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       case "loadAssetFile":
         loadAssetFile(methodCall, result);
         break;
+      case "loadData":
+        loadData(methodCall, result);
+        break;
       case "updateSettings":
         updateSettings(methodCall, result);
         break;
@@ -123,6 +126,16 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   private void loadAssetFile(MethodCall methodCall, Result result) {
     String url = (String) methodCall.arguments;
     webView.loadUrl("file:///android_asset/flutter_assets/" + url);
+    result.success(null);
+  }
+
+  private void loadData(MethodCall methodCall, Result result) {
+    String baseUrl = methodCall.argument("baseUrl");
+    String data = methodCall.argument("data");
+    String mimeType = methodCall.argument("mimeType");
+    String encoding = methodCall.argument("encoding");
+    String historyUrl = methodCall.argument("historyUrl");
+    webView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
     result.success(null);
   }
 
