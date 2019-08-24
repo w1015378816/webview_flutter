@@ -101,7 +101,9 @@
     [self onUpdateSettings:call result:result];
   } else if ([[call method] isEqualToString:@"loadUrl"]) {
     [self onLoadUrl:call result:result];
-  } else if ([[call method] isEqualToString:@"loadAssetFile"]) {
+  } else if ([[call method] isEqualToString:@"loadData"]) {
+    [self onLoadData:call result:result];
+  }else if ([[call method] isEqualToString:@"loadAssetFile"]) {
     [self onLoadAssetFile:call result:result];
   } else if ([[call method] isEqualToString:@"canGoBack"]) {
     [self onCanGoBack:call result:result];
@@ -142,6 +144,22 @@
   } else {
     result(nil);
   }
+}
+- (void)onLoadData:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary * dic = [call arguments];
+    NSData *data = dic[@"data"];
+    NSString *encoding = dic[@"encoding"];
+    NSString *mimeType = dic[@"mimeType"];
+    [_webView loadData:data MIMEType:mimeType textEncodingName:encoding baseURL:nil];
+    /*if (![self loadRequest:[call arguments]]) {
+        result([FlutterError
+                errorWithCode:@"loadUrl_failed"
+                message:@"Failed parsing the URL"
+                details:[NSString stringWithFormat:@"Request was: '%@'", [call arguments]]]);
+    } else {
+        result(nil);
+    }*/
+    result(nil);
 }
 
 - (void)onLoadAssetFile:(FlutterMethodCall*)call result:(FlutterResult)result {
