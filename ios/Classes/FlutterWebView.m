@@ -150,7 +150,7 @@
     NSData *data = dic[@"data"];
     NSString *encoding = dic[@"encoding"];
     NSString *mimeType = dic[@"mimeType"];
-    [_webView loadData:data MIMEType:mimeType textEncodingName:encoding baseURL:nil];
+    [_webView loadData:data MIMEType:mimeType characterEncodingName:encoding baseURL:nil];
     /*if (![self loadRequest:[call arguments]]) {
         result([FlutterError
                 errorWithCode:@"loadUrl_failed"
