@@ -147,10 +147,11 @@
 }
 - (void)onLoadData:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary * dic = [call arguments];
-    NSData *data = dic[@"data"];
+    NSString *data = dic[@"data"];
     NSString *encoding = dic[@"encoding"];
     NSString *mimeType = dic[@"mimeType"];
-    [_webView loadData:data MIMEType:mimeType characterEncodingName:encoding baseURL:nil];
+    NSString *urlStr = dic[@"baseUrl"];
+    [_webView loadHTMLString:data baseURL:[NSURL URLWithString:urlStr]];
     /*if (![self loadRequest:[call arguments]]) {
         result([FlutterError
                 errorWithCode:@"loadUrl_failed"
