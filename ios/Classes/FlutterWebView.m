@@ -151,7 +151,7 @@
     NSString *encoding = dic[@"encoding"];
     NSString *mimeType = dic[@"mimeType"];
     NSString *urlStr = dic[@"baseUrl"];
-    if(urlStr == null){
+    if([urlStr isKindOfClass:[NSNull class]]){
         [_webView loadHTMLString:data baseURL:nil];
     }else{
         [_webView loadHTMLString:data baseURL:[NSURL URLWithString:urlStr]];
