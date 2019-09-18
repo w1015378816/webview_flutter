@@ -151,42 +151,8 @@
 }
 
 - (void)onShareImage:(FlutterMethodCall*)call result:(FlutterResult)result {
-    [self shareWebImage];
-    result(nil);
-}
-- (void)shareWebImage{
-    UIImage *image = [self getWebImage];
-    NSString *textToShare1 = @"六棱镜长图分享";
-    UIImage *shareImage = image;
-    activityItems = @[textToShare1,shareImage];
-    
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
-    //去除一些不需要的图标选项
-    activityVC.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypeAirDrop, UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo];
-    
-    //成功失败的回调block
-    UIActivityViewControllerCompletionWithItemsHandler myBlock = ^(UIActivityType __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError) {
-        if (completed){
-            NSLog(@"---------------completed");
-        }else{
-            NSLog(@"---------------canceled");
-        }
-    };
-    activityVC.completionWithItemsHandler = myBlock;
-    [rootVc presentViewController:activityVC animated:YES completion:nil];
-}
-
-
-- (void)onSaveImage:(FlutterMethodCall*)call result:(FlutterResult)result {
-    [self saveWebImage];
-    result(nil);
-}
-- (void)saveWebImage{
-    UIImage *image = [self getWebImage];
-}
-- (UIImage)getWebImage{
     // 制作了一个UIView的副本
-    UIView *snapShotView = [webView snapshotViewAfterScreenUpdates:YES];
+    UIView *snapShotView = [_webView snapshotViewAfterScreenUpdates:YES];
     
     snapShotView.frame = CGRectMake(_webView.frame.origin.x, _webView.frame.origin.y, snapShotView.frame.size.width, snapShotView.frame.size.height);
     
@@ -202,7 +168,6 @@
     UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, false, [UIScreen mainScreen].scale);
     
     NSLog(@"--index--%d", (int)maxIndex);
-    
     // 滚动截图
     [self ZTContentScroll:_webView PageDraw:0 maxIndex:(int)maxIndex drawCallback:^{
         UIImage *capturedImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -212,12 +177,48 @@
         [_webView.scrollView setContentOffset:scrollOffset animated:NO];
         [snapShotView removeFromSuperview];
         
-        return capturedImage;
-        
+        [self shareWebImage:capturedImage];
     }];
+    
+    result(nil);
 }
+- (void)shareWebImage:(UIImage *)image{
+    NSArray *activityItems;
+    NSString *textToShare1 = @"六棱镜长图分享";
+    activityItems = @[textToShare1,image];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+    //去除一些不需要的图标选项
+    activityVC.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypeAirDrop, UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo];
+    
+    //成功失败的回调block
+    UIActivityViewControllerCompletionWithItemsHandler myBlock = ^(UIActivityType __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError) {
+        if (completed){
+            NSLog(@"---------------completed");
+        }else{
+            NSLog(@"---------------canceled");
+        }
+    };
+    activityVC.completionWithItemsHandler = myBlock;
+    [self.viewController presentViewController:activityVC animated:YES completion:nil];
+}
+- (UIViewController *)viewController {
+    for (UIView* next = [_webView superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+
+- (void)onSaveImage:(FlutterMethodCall*)call result:(FlutterResult)result {
+    result(nil);
+}
+
 // 滚动截图
-- (void)ZTContentScroll:(WKWebView *)webView PageDraw:(int)index maxIndex:(int)maxIndex drawCallback:(void(^)(void))drawCallback{
+- (void)ZTContentScroll:(WKWebView *)webView PageDraw:(int)index maxIndex:(int)maxIndex drawCallback:(void(^)(void) )drawCallback{
     [webView.scrollView setContentOffset:CGPointMake(0, (float)index * webView.frame.size.height)];
     CGRect splitFrame = CGRectMake(0, (float)index * webView.frame.size.height, webView.bounds.size.width, webView.bounds.size.height);
     

@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="737893bf-ccf6-46d9-b8af-becda44c7da4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/example/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/example/.packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterWebView.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterWebView.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/generated/i18n.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/generated/i18n.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/webview_flutter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/webview_flutter.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,8 +46,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/webview_flutter.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="441" column="7" lean-forward="true" selection-start-line="441" selection-start-column="7" selection-end-line="441" selection-end-column="7" />
+            <state relative-caret-position="328">
+              <caret line="452" column="5" lean-forward="true" selection-start-line="452" selection-start-column="5" selection-end-line="452" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -219,8 +211,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/webview_flutter.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="441" column="7" lean-forward="true" selection-start-line="441" selection-start-column="7" selection-end-line="441" selection-end-column="7" />
+        <state relative-caret-position="328">
+          <caret line="452" column="5" lean-forward="true" selection-start-line="452" selection-start-column="5" selection-end-line="452" selection-end-column="5" />
         </state>
       </provider>
     </entry>
