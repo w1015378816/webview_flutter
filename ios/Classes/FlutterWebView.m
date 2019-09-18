@@ -103,7 +103,11 @@
     [self onLoadUrl:call result:result];
   } else if ([[call method] isEqualToString:@"loadData"]) {
     [self onLoadData:call result:result];
-  }else if ([[call method] isEqualToString:@"loadAssetFile"]) {
+  } else if ([[call method] isEqualToString:@"shareWebImage"]) {
+      [self onShareImage:call result:result];
+  } else if ([[call method] isEqualToString:@"saveWebImage"]) {
+      [self onSaveImage:call result:result];
+  } else if ([[call method] isEqualToString:@"loadAssetFile"]) {
     [self onLoadAssetFile:call result:result];
   } else if ([[call method] isEqualToString:@"canGoBack"]) {
     [self onCanGoBack:call result:result];
@@ -145,6 +149,88 @@
     result(nil);
   }
 }
+
+- (void)onShareImage:(FlutterMethodCall*)call result:(FlutterResult)result {
+    [self shareWebImage];
+    result(nil);
+}
+- (void)shareWebImage{
+    UIImage *image = [self getWebImage];
+    NSString *textToShare1 = @"六棱镜长图分享";
+    UIImage *shareImage = image;
+    activityItems = @[textToShare1,shareImage];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+    //去除一些不需要的图标选项
+    activityVC.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypeAirDrop, UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo];
+    
+    //成功失败的回调block
+    UIActivityViewControllerCompletionWithItemsHandler myBlock = ^(UIActivityType __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError) {
+        if (completed){
+            NSLog(@"---------------completed");
+        }else{
+            NSLog(@"---------------canceled");
+        }
+    };
+    activityVC.completionWithItemsHandler = myBlock;
+    [rootVc presentViewController:activityVC animated:YES completion:nil];
+}
+
+
+- (void)onSaveImage:(FlutterMethodCall*)call result:(FlutterResult)result {
+    [self saveWebImage];
+    result(nil);
+}
+- (void)saveWebImage{
+    UIImage *image = [self getWebImage];
+}
+- (UIImage)getWebImage{
+    // 制作了一个UIView的副本
+    UIView *snapShotView = [webView snapshotViewAfterScreenUpdates:YES];
+    
+    snapShotView.frame = CGRectMake(_webView.frame.origin.x, _webView.frame.origin.y, snapShotView.frame.size.width, snapShotView.frame.size.height);
+    
+    [_webView.superview addSubview:snapShotView];
+    
+    // 获取当前UIView可滚动的内容长度
+    CGPoint scrollOffset = _webView.scrollView.contentOffset;
+    
+    // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
+    float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
+    
+    // 保持清晰度
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, false, [UIScreen mainScreen].scale);
+    
+    NSLog(@"--index--%d", (int)maxIndex);
+    
+    // 滚动截图
+    [self ZTContentScroll:_webView PageDraw:0 maxIndex:(int)maxIndex drawCallback:^{
+        UIImage *capturedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // 恢复原UIView
+        [_webView.scrollView setContentOffset:scrollOffset animated:NO];
+        [snapShotView removeFromSuperview];
+        
+        return capturedImage;
+        
+    }];
+}
+// 滚动截图
+- (void)ZTContentScroll:(WKWebView *)webView PageDraw:(int)index maxIndex:(int)maxIndex drawCallback:(void(^)(void))drawCallback{
+    [webView.scrollView setContentOffset:CGPointMake(0, (float)index * webView.frame.size.height)];
+    CGRect splitFrame = CGRectMake(0, (float)index * webView.frame.size.height, webView.bounds.size.width, webView.bounds.size.height);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [webView drawViewHierarchyInRect:splitFrame afterScreenUpdates:YES];
+        if(index < maxIndex){
+            [self ZTContentScroll:webView PageDraw: index + 1 maxIndex:maxIndex drawCallback:drawCallback];
+        }else{
+            drawCallback();
+        }
+    });
+}
+
 - (void)onLoadData:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary * dic = [call arguments];
     NSString *data = dic[@"data"];
@@ -165,6 +251,19 @@
     } else {
         result(nil);
     }*/
+    result(nil);
+}
+- (void)onLoadData:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary * dic = [call arguments];
+    NSString *data = dic[@"data"];
+    NSString *encoding = dic[@"encoding"];
+    NSString *mimeType = dic[@"mimeType"];
+    NSString *urlStr = dic[@"baseUrl"];
+    if([urlStr isKindOfClass:[NSNull class]]){
+        [_webView loadHTMLString:data baseURL:nil];
+    }else{
+        [_webView loadHTMLString:data baseURL:[NSURL URLWithString:urlStr]];
+    }
     result(nil);
 }
 

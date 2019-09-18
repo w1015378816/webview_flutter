@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -439,6 +440,13 @@ class WebViewController {
       'encoding': encoding,
       'historyUrl': historyUrl,
     });
+  }
+
+  Future<void> shareWebImage() async {
+    return _channel.invokeMethod('shareWebImage');
+  }
+  Future<void> saveWebImage() async {
+    return _channel.invokeMethod('saveWebImage');
   }
 
   /// Loads the specified file.
