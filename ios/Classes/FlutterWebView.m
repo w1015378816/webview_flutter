@@ -254,6 +254,7 @@
     }*/
     result(nil);
 }
+/*
 - (void)onLoadData:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary * dic = [call arguments];
     NSString *data = dic[@"data"];
@@ -266,7 +267,7 @@
         [_webView loadHTMLString:data baseURL:[NSURL URLWithString:urlStr]];
     }
     result(nil);
-}
+}*/
 
 - (void)onLoadAssetFile:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSString* url = [call arguments];
