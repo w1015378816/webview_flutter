@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="737893bf-ccf6-46d9-b8af-becda44c7da4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterWebView.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterWebView.m" afterDir="false" />
-    </list>
+    <list default="true" id="737893bf-ccf6-46d9-b8af-becda44c7da4" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +22,7 @@
     <session id="-847476685">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.opened" value="2" />
         </counts>
@@ -71,8 +69,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="649" />
-    <option name="y" value="167" />
+    <option name="x" value="169" />
+    <option name="y" value="23" />
     <option name="width" value="1160" />
     <option name="height" value="771" />
   </component>
@@ -152,7 +150,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="649" y="167" width="1160" height="771" extended-state="0" />
+    <frame x="169" y="23" width="1160" height="771" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
