@@ -216,12 +216,24 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   }
 
   private Bitmap webToBitmap (){
-    float scale = webView.getScale();
+    int height = (int) (webView.getContentHeight() * webView.getScale());
     int width = webView.getWidth();
-    int height = (int) (webView.getContentHeight() * scale + 0.5);
+    int pH = webView.getHeight();
     Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
     Canvas canvas = new Canvas(bitmap);
-    webView.draw(canvas);
+    int top = height;
+    while (top > 0) {
+      if (top < pH) {
+        top = 0;
+      } else {
+        top -= pH;
+      }
+      canvas.save();
+      canvas.clipRect(0, top, width, top + pH);
+      webView.scrollTo(0, top);
+      webView.draw(canvas);
+      canvas.restore();
+    }
     return bitmap;
   }
 
