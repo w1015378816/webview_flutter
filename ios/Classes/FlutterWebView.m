@@ -164,7 +164,7 @@
     // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
     float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
     // 保持清晰度
-    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 0);
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 2);
     
     //NSLog(@"--index--%d", (int)maxIndex);
     // 滚动截图
@@ -196,7 +196,6 @@
     }
 }
 - (void)onShareImage:(FlutterMethodCall*)call result:(FlutterResult)result {
-    
     NSLog(@"分享图片开始");
     //制作了一个UIView的副本
     UIView *snapShotView = [_webView snapshotViewAfterScreenUpdates:YES];
@@ -208,13 +207,12 @@
     // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
     float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
     // 保持清晰度
-    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 0);
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 2);
     //NSLog(@"--index--%d", (int)maxIndex);
     // 滚动截图
     [self ZTContentScroll:_webView PageDraw:0 maxIndex:(int)maxIndex drawCallback:^{
         UIImage *capturedImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
         // 恢复原UIView
         [snapShotView removeFromSuperview];
         [self->_webView.scrollView setContentOffset:scrollOffset animated:NO];
@@ -224,20 +222,19 @@
 }
 - (void)shareWebImage:(UIImage *)image{
     
-    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*0.98, image.size.height*0.98));
-    [image drawInRect:CGRectMake(0,0,image.size.width*0.98,image.size.height*0.98)];
+    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*0.999, image.size.height*0.999));
+    [image drawInRect:CGRectMake(0,0,image.size.width*0.999,image.size.height*0.999)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    UIImage *myImage = [UIImage imageWithData:UIImageJPEGRepresentation(newImage, 0.8)];
+    //UIImage *myImage = [UIImage imageWithData:UIImageJPEGRepresentation(image, 0.98)];
     
     NSArray *activityItems;
     NSString *textToShare1 = @"六棱镜长图分享";
-    activityItems = @[textToShare1,myImage];
+    activityItems = @[textToShare1,newImage];
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
     //去除一些不需要的图标选项
     activityVC.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypeAirDrop, UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo];
-    
     //成功失败的回调block
     UIActivityViewControllerCompletionWithItemsHandler myBlock = ^(UIActivityType __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError) {
         if (completed){
