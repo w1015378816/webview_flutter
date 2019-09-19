@@ -207,7 +207,7 @@
     // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
     float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
     // 保持清晰度
-    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 2);
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, false, 2);
     //NSLog(@"--index--%d", (int)maxIndex);
     // 滚动截图
     [self ZTContentScroll:_webView PageDraw:0 maxIndex:(int)maxIndex drawCallback:^{
