@@ -33,6 +33,7 @@ class _WebViewExampleState extends State<WebViewExample> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
+  String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBpZCI6Ik83ZDJRamtvTThkQVRBUGhOV3o2UzZLRWdsV3VheDlEVHYzREpaN25NY289IiwiZXhwIjoxNTY4ODk1NjY0fQ.QlFKbkK1MYBzZmxovxjVj8BUTT_2Pz50tE8hqku6vQU";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +49,8 @@ class _WebViewExampleState extends State<WebViewExample> {
       // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: 'https://flutter.dev',
+//          initialUrl: 'https://flutter.dev',
+          initialUrl: 'http://58.132.214.146:7171/index.html#/analysisReport?id=000454100&token=$token',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);

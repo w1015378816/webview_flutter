@@ -245,6 +245,7 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     intent.setType("image/*");//设置分享内容的类型
     intent.putExtra(Intent.EXTRA_STREAM, uri);
     intent = Intent.createChooser(intent, "分享");
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
     result.success(null);
   }
