@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.WebStorage;
@@ -20,6 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import io.flutter.Log;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -45,6 +47,9 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   @SuppressWarnings("unchecked")
   FlutterWebView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
     this.context = context;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      WebView.enableSlowWholeDocumentDraw();
+    }
     webView = new WebView(context);
     platformThreadHandler = new Handler(context.getMainLooper());
     // Allow local storage.
@@ -218,27 +223,16 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   private Bitmap webToBitmap (){
     int height = (int) (webView.getContentHeight() * webView.getScale());
     int width = webView.getWidth();
-    int pH = webView.getHeight();
-    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-    Canvas canvas = new Canvas(bitmap);
-    int top = height;
-    while (top > 0) {
-      if (top < pH) {
-        top = 0;
-      } else {
-        top -= pH;
-      }
-      canvas.save();
-      canvas.clipRect(0, top, width, top + pH);
-      webView.scrollTo(0, top);
-      webView.draw(canvas);
-      canvas.restore();
-    }
+
+    final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+    final Canvas canvas = new Canvas(bitmap);
+    webView.draw(canvas);
     return bitmap;
   }
 
   private void shareWebImage(MethodCall methodCall, Result result) {
     Bitmap bitmap = webToBitmap();
+    Log.e("wubin", "bitmap ==" +bitmap);
     Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null,null));
     Intent intent = new Intent();
     intent.setAction(Intent.ACTION_SEND);//设置分享行为

@@ -33,7 +33,7 @@ class _WebViewExampleState extends State<WebViewExample> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
-  String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBpZCI6Ik83ZDJRamtvTThkQVRBUGhOV3o2UzZLRWdsV3VheDlEVHYzREpaN25NY289IiwiZXhwIjoxNTY4ODk1NjY0fQ.QlFKbkK1MYBzZmxovxjVj8BUTT_2Pz50tE8hqku6vQU";
+  String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBpZCI6Ik83ZDJRamtvTThkQVRBUGhOV3o2UzZLRWdsV3VheDlEVHYzREpaN25NY289IiwiZXhwIjoxNTY4OTA3OTE5fQ.I5jqCQPNqWPsIoyihRkouiK-NCTgoqcq4jcWGQDCQqw";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
