@@ -164,7 +164,7 @@
     // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
     float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
     // 保持清晰度
-    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 2);
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 0);
     
     //NSLog(@"--index--%d", (int)maxIndex);
     // 滚动截图
@@ -177,7 +177,7 @@
         [snapShotView removeFromSuperview];
         //
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"提示"
-                                                                       message:@"保存图片成功."
+                                                                       message:@"保存图片成功"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel
                                                              handler:^(UIAlertAction * action) {}];
@@ -207,7 +207,7 @@
     // 向上取整数 － 可滚动长度与UIView本身屏幕边界坐标相差倍数
     float maxIndex = ceilf(_webView.scrollView.contentSize.height/_webView.bounds.size.height);
     // 保持清晰度
-    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 2);
+    UIGraphicsBeginImageContextWithOptions(_webView.scrollView.contentSize, true, 0);
     //NSLog(@"--index--%d", (int)maxIndex);
     // 滚动截图
     [self ZTContentScroll:_webView PageDraw:0 maxIndex:(int)maxIndex drawCallback:^{
@@ -222,11 +222,11 @@
 }
 - (void)shareWebImage:(UIImage *)image{
     
-    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*0.999, image.size.height*0.999));
-    [image drawInRect:CGRectMake(0,0,image.size.width*0.999,image.size.height*0.999)];
+    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*0.9999, image.size.height*0.9999));
+    [image drawInRect:CGRectMake(0,0,image.size.width*0.9999,image.size.height*0.9999)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    //UIImage *myImage = [UIImage imageWithData:UIImageJPEGRepresentation(image, 0.98)];
+    //UIImage *myImage = [UIImage imageWithData:UIImageJPEGRepresentation(newImage, 0.99)];
     
     NSArray *activityItems;
     NSString *textToShare1 = @"六棱镜长图分享";
