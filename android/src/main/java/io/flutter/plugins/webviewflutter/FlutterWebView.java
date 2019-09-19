@@ -6,18 +6,30 @@ package io.flutter.plugins.webviewflutter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.platform.PlatformView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +40,11 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   private final MethodChannel methodChannel;
   private final FlutterWebViewClient flutterWebViewClient;
   private final Handler platformThreadHandler;
+  private final Context context;
 
   @SuppressWarnings("unchecked")
   FlutterWebView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
+    this.context = context;
     webView = new WebView(context);
     platformThreadHandler = new Handler(context.getMainLooper());
     // Allow local storage.
@@ -72,6 +86,12 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
         break;
       case "loadData":
         loadData(methodCall, result);
+        break;
+      case "saveWebImage":
+        saveWebImage(methodCall, result);
+        break;
+      case "shareWebImage":
+        shareWebImage(methodCall, result);
         break;
       case "updateSettings":
         updateSettings(methodCall, result);
@@ -136,6 +156,84 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     String encoding = methodCall.argument("encoding");
     String historyUrl = methodCall.argument("historyUrl");
     webView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+    result.success(null);
+  }
+
+  private void saveWebImage(MethodCall methodCall, Result result) {
+    Bitmap bitmap = webToBitmap();
+    String fileName = System.currentTimeMillis()+"";
+    saveBmp2Gallery(context,bitmap, fileName);
+    result.success(null);
+  }
+
+  /**
+   * @param bmp 获取的bitmap数据
+   * @param picName 自定义的图片名
+   */
+  public static void saveBmp2Gallery(Context context,Bitmap bmp, String picName) {
+//    saveImageToGallery(bmp,picName);
+    String fileName = null;
+    //系统相册目录
+    String galleryPath = Environment.getExternalStorageDirectory()
+            + File.separator + Environment.DIRECTORY_DCIM
+            + File.separator + "Camera" + File.separator;
+
+
+    // 声明文件对象
+    File file = null;
+    // 声明输出流
+    FileOutputStream outStream = null;
+    try {
+      // 如果有目标文件，直接获得文件对象，否则创建一个以filename为名称的文件
+      file = new File(galleryPath, picName + ".jpg");
+      // 获得文件相对路径
+      fileName = file.toString();
+      // 获得输出流，如果文件中有内容，追加内容
+      outStream = new FileOutputStream(fileName);
+      if (null != outStream) {
+        bmp.compress(Bitmap.CompressFormat.JPEG, 90, outStream);
+      }
+    }catch (Exception e) {
+      e.getStackTrace();
+    } finally {
+      try {
+        if (outStream != null) {
+          outStream.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,fileName,null);
+    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+    Uri uri = Uri.fromFile(file);
+    intent.setData(uri);
+    context.sendBroadcast(intent);
+
+    Toast.makeText(context,"图片保存成功", Toast.LENGTH_SHORT).show();
+
+  }
+
+  private Bitmap webToBitmap (){
+    float scale = webView.getScale();
+    int width = webView.getWidth();
+    int height = (int) (webView.getContentHeight() * scale + 0.5);
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+    Canvas canvas = new Canvas(bitmap);
+    webView.draw(canvas);
+    return bitmap;
+  }
+
+  private void shareWebImage(MethodCall methodCall, Result result) {
+    Bitmap bitmap = webToBitmap();
+    Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null,null));
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_SEND);//设置分享行为
+    intent.setType("image/*");//设置分享内容的类型
+    intent.putExtra(Intent.EXTRA_STREAM, uri);
+    intent = Intent.createChooser(intent, "分享");
+    context.startActivity(intent);
     result.success(null);
   }
 
