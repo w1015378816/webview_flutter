@@ -449,6 +449,13 @@ class WebViewController {
     return _channel.invokeMethod('saveWebImage');
   }
 
+  Future<void> scrollTo(int x, int y) async {
+    return _channel.invokeMethod('scrollTo', <String, dynamic>{
+      'x': x,
+      'y': y,
+    });
+  }
+
   /// Loads the specified file.
   ///
   /// `url` must not be null.

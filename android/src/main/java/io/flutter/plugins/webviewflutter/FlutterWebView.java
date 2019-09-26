@@ -98,6 +98,9 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       case "shareWebImage":
         shareWebImage(methodCall, result);
         break;
+      case "scrollTo":
+        scrollTo(methodCall, result);
+        break;
       case "updateSettings":
         updateSettings(methodCall, result);
         break;
@@ -241,6 +244,13 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     intent = Intent.createChooser(intent, "分享");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
+    result.success(null);
+  }
+
+  private void scrollTo(MethodCall methodCall, Result result) {
+    int x = methodCall.argument("x");
+    int y = methodCall.argument("y");
+    webView.scrollTo(x, y);
     result.success(null);
   }
 
